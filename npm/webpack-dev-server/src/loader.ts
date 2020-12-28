@@ -45,8 +45,10 @@ function buildSpecs (projectRoot: string, files: Cypress.Cypress['spec'][] = [])
   }).join(',')}}`
 }
 
+const entry = path.resolve(__dirname, './browser.js')
+
 // Runs the tests inside the iframe
-export default function loader (): string {
+export default function loader () {
   const { files, projectRoot } = this._cypress as { files: Cypress.Cypress['spec'][], projectRoot: string }
 
   return `
@@ -59,8 +61,10 @@ export default function loader (): string {
     .map(a => allTheSpecs[a].load())
   )
 
-  if (module.hot) {
-    module.hot.accept()
+  if(module.hot){
+    module.hot.accept(${JSON.stringify(entry)}, () => {
+      module.hot.invalidate()
+    })
   }
   restartRunner()
   `
