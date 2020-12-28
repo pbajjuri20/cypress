@@ -46,7 +46,7 @@ function buildSpecs (projectRoot: string, files: Cypress.Cypress['spec'][] = [])
 }
 
 // Runs the tests inside the iframe
-export default function loader () {
+export default function loader (): string {
   const { files, projectRoot } = this._cypress as { files: Cypress.Cypress['spec'][], projectRoot: string }
 
   return `
@@ -60,7 +60,8 @@ export default function loader () {
   )
 
   if (module.hot) {
-    restartRunner()
+    module.hot.accept()
   }
+  restartRunner()
   `
 }
